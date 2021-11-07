@@ -1,0 +1,64 @@
+
+forwarder:
+  configMapFiles:
+    fluentd-inputs.conf: |
+      # HTTP input for the liveness and readiness probes
+      <source>
+        @type http
+        port 9880
+      </source>
+
+      <match fluentd.healthcheck>
+        @type null
+      </match>
+
+      # Get the logs from the containers running in the node
+      <source>
+        @type tail
+        path /var/log/containers/*.log
+        # exclude Fluentd logs
+        exclude_path /var/log/containers/*fluentd*.log
+        pos_file /opt/bitnami/fluentd/logs/buffers/fluentd-docker.pos
+        tag kubernetes.logs.*
+        read_from_head true
+        <parse>
+          @type none
+          time_format %Y-%m-%dT%H:%M:%S.%NZ
+        </parse>
+      </source>
+
+      #<filter **>
+      #  @type parser
+      #  key_name message
+      #  <parse>
+      #    @type multi_format
+      #    <pattern>
+      #      format json
+      #      time_key time
+      #      keep_time_key true
+      #    </pattern>
+      #  </parse>
+      #</filter>
+
+      # enrich with kubernetes metadata
+      <filter kubernetes.logs.**>
+          @type kubernetes_metadata
+      </filter>
+
+
+    fluentd-output.conf: |
+      <match kubernetes.logs.**>
+        @type elasticsearch
+        include_tag_key true
+        host "quickstart-es-http.elastic-system.svc.cluster.local"
+        port "9200"
+        user "elastic"
+        password "50HE7ZPA3p0lh7un4g390KLo"
+        index_name "test-app-logs"
+        <buffer>
+          @type file
+          path /opt/bitnami/fluentd/logs/buffers/test-logs.buffer
+          flush_thread_count 2
+          flush_interval 5s
+        </buffer>
+      </match>

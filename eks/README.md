@@ -10,7 +10,7 @@
 - cloud-controller-manager - componente que possui lógica de código de um cloud provider. Por exemplo quando criamos um Service do tipo LoadBalancer, esse componente se encarrega de fazer a chamada da API do provedor para criar o Load Balancer para nós
 - kubelet - um agente que roda em cada K8s Node e garante que os containers rodem dentro de Pods
 - kube-proxy - é um proxy de rede que roda em cada Node do k8s, e mantém as regras de rede controlando a comunicação da rede
-- runtime - software responsável por rodar containers, como por exemplo docker, containerd, e outros que suportam o CRI (container runtime interface)  
+- runtime - software responsável por rodar containers, como por exemplo docker, containerd, e outros que suportam o CRI (container runtime interface)
 
 ### Exemplo app
 `kubectl apply -f example-app`
@@ -28,10 +28,10 @@
 - Focamos apenas em criar os worker nodes
 
 ### Como subir
-Existem duas formas de subir: 
+Existem duas formas de subir:
 
 1. console da AWS (requer várias configurações - IAM Roles, Security groups, VPC)
-- Criar Cluster Control Plane (master nodes): 
+- Criar Cluster Control Plane (master nodes):
     - escolher nome, versão k8s
     - escolher região e VPC
     - configurar segurança
@@ -143,7 +143,7 @@ Se for preciso remover um nodeGroup do cluster, remova no yaml e rode o seguinte
 ### Atualizando um cluster EKS
 
 1. Altere o número da version em cluster.yaml
-2. Atualize o Control Plane 
+2. Atualize o Control Plane
 ```eksctl update cluster --config-file cluster.yaml```
 3. Atualize os core components
 - aws-node
@@ -154,11 +154,11 @@ Se for preciso remover um nodeGroup do cluster, remova no yaml e rode o seguinte
     - `eksctl utils update-kube-proxy --cluster <cluster-name> --profile <aws-profile> --approve`
 3. Atualize os worker Nodes
 - Managed NodeGroup
-        `eksctl update nodegroup --cluster <nome cluster> --name <nome nodeGroup> --kubernetes-version <version>`
+        `eksctl upgrade nodegroup --cluster <nome cluster> --name <nome nodeGroup> --kubernetes-version <version>`
 - unmanaged NodeGroup
     - adicione uma mesma configuração de nodeGroup com outro nome ex: `nodegroup-v2`
-    - aplique a nova configuração: `eksctl create nodegroup --config-file cluster.yaml --approve`
-    - remova o nodegroup e aplique no cluster: `eksctl delete nodegroup --config-file cluster.yaml --only-missing --approve`
+    - aplique a nova configuração: `eksctl create nodegroup --config-file cluster.yaml`
+    - remova o nodegroup e aplique no cluster: `eksctl delete nodegroup --config-file cluster.yaml --only-missing`
 ```
 - name: general-v2
   labels:

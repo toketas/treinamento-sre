@@ -19,7 +19,7 @@ vpc:
       private-us-east-1b:
         id: subnet-04f1fab8929d40965
 nodeGroups:
-- name: general-v1
+- name: general-v2
   labels:
     role: general
   instanceType: t3.small
@@ -30,23 +30,23 @@ nodeGroups:
   subnets:
   - private-us-east-1a
   - private-us-east-1b
-  - name: spot-v1
-    labels:
-      role: spot
-    minSize: 1
-    maxSize: 1
-    instancesDistribution:
-      instanceTypes:
-      - t3.small
-      onDemandBaseCapacity: 0
-      onDemandPercentageAboveBaseCapacity: 0
-      spotInstancePools: 20
-    privateNetworking: true
-    taints:
-      spot: "true:NoSchedule"
-    subnets:
-    - private-us-east-1a
-    - private-us-east-1b
+- name: spot-v2
+  labels:
+    role: spot
+  minSize: 1
+  maxSize: 1
+  instancesDistribution:
+    instanceTypes:
+    - t3.small
+    onDemandBaseCapacity: 0
+    onDemandPercentageAboveBaseCapacity: 0
+    spotInstancePools: 20
+  privateNetworking: true
+  taints:
+    spot: "true:NoSchedule"
+  subnets:
+  - private-us-east-1a
+  - private-us-east-1b
 managedNodeGroups:
 - name: managed
   instanceType: t3.small
