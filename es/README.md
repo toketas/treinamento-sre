@@ -1,5 +1,7 @@
 # Elasticsearch
 
+![Alt](./es.png)
+
 ## Definição
 
 - Busca textual e fonetica por relevência
